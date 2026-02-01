@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: spotify-mfe
-          image: ghcr.io/OWNER/spotify-mfe:latest
+          image: ghcr.io/drewlane-dev/smart-home-pi/spotify-ui:latest
           ports:
             - containerPort: 80
           resources:
