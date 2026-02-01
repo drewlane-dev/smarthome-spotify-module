@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spotify-mfe
+  namespace: smarthome
+  labels:
+    app: spotify-mfe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spotify-mfe
+  template:
+    metadata:
+      labels:
+        app: spotify-mfe
+    spec:
+      containers:
+        - name: spotify-mfe
+          image: ghcr.io/OWNER/spotify-mfe:latest
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spotify-mfe
+  namespace: smarthome
+spec:
+  type: NodePort
+  selector:
+    app: spotify-mfe
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30201

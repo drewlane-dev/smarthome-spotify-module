@@ -1,0 +1,21 @@
+{
+  "fields": [
+    {
+      "name": "deviceName",
+      "label": "Device Name",
+      "type": "text",
+      "required": true,
+      "defaultValue": "Smarthome Speaker",
+      "description": "The name that will appear in your Spotify app"
+    },
+    {
+      "name": "bitrate",
+      "label": "Audio Quality",
+      "type": "select",
+      "required": true,
+      "defaultValue": "320",
+      "options": ["96", "160", "320"],
+      "description": "Audio bitrate in kbps"
+    }
+  ]
+}

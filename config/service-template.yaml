@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spotify-config
+  namespace: smarthome
+data:
+  spotifyd.conf: |
+    [global]
+    device_name = "{{deviceName}}"
+    bitrate = {{bitrate}}
+    backend = "alsa"
+    device = "default"
+    volume_controller = "softvol"
+    zeroconf_port = 5353
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spotify
+  namespace: smarthome
+  labels:
+    app: spotify
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: spotify
+  template:
+    metadata:
+      labels:
+        app: spotify
+    spec:
+      hostNetwork: true
+      containers:
+        - name: spotifyd
+          image: agneev/spotifyd:latest
+          command:
+            - spotifyd
+            - --config-path
+            - /etc/spotifyd/spotifyd.conf
+            - --no-daemon
+            - --cache-path
+            - /tmp/spotifyd-cache
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: config
+              mountPath: /etc/spotifyd
+            - name: sound
+              mountPath: /dev/snd
+            - name: asound-conf
+              mountPath: /etc/asound.conf
+      volumes:
+        - name: config
+          configMap:
+            name: spotify-config
+        - name: sound
+          hostPath:
+            path: /dev/snd
+        - name: asound-conf
+          hostPath:
+            path: /etc/asound.conf
+            type: File
+      restartPolicy: Always

@@ -1,0 +1,14 @@
+{
+  "name": "spotify",
+  "displayName": "Spotify Connect",
+  "description": "Enable Spotify Connect on this device. Once enabled, this device will appear in your Spotify app for playback.",
+  "remoteEntry": "/remoteEntry.json",
+  "remoteName": "spotify",
+  "exposedModule": "./Component",
+  "componentExport": "SpotifyComponent",
+  "tile": {
+    "label": "Spotify",
+    "icon": "music_note",
+    "color": "#1DB954"
+  }
+}
