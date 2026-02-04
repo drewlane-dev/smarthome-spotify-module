@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: spotify-mfe
-          image: ghcr.io/drewlane-dev/smart-home-pi/spotify-ui:latest
+          image: spotify-mfe:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 80
           resources:
@@ -40,4 +41,3 @@ spec:
   ports:
     - port: 80
       targetPort: 80
-      nodePort: 30201
