@@ -1,33 +1,69 @@
-# Spotify Module for Smarthome
+# Smarthome Spotify Module
 
-A smarthome module that enables Spotify Connect on your device.
+Spotify Connect module for the smarthome system. Enables Spotify playback on your smarthome device using Spotifyd.
 
 ## Structure
 
 ```
-config/
-├── mfe-manifest.json      # MFE configuration (tile, routing)
-├── mfe-deployment.yaml    # Kubernetes deployment for MFE container
-├── module-fields.json     # Configuration fields for the module
-└── service-template.yaml  # Kubernetes template for spotifyd service
+smarthome-spotify-module/
+├── config/
+│   ├── mfe-manifest.json      # MFE configuration for shell
+│   ├── module-fields.json     # Configuration form fields
+│   ├── mfe-deployment.yaml    # K8s deployment for UI
+│   └── service-template.yaml  # K8s deployment for Spotifyd
+└── spotify-ui/                # Angular MFE application
+    ├── src/
+    ├── Dockerfile
+    └── package.json
 ```
 
-## Installation
+## Configuration Fields
 
-1. Open your Smarthome UI
-2. Click the "+" button in the header
-3. Enter this repository URL: `https://github.com/YOUR_USERNAME/spotify-module`
-4. Click "Validate" then "Install Module"
+| Field | Type | Description |
+|-------|------|-------------|
+| deviceName | text | Name shown in Spotify app |
+| bitrate | select | Audio quality (96/160/320 kbps) |
 
-## Configuration
+## Development
 
-After installation, the module will prompt you to configure:
+### Prerequisites
+- Node.js 20+
+- smarthome-management-api running on port 5000
 
-- **Device Name**: The name that appears in your Spotify app
-- **Audio Quality**: Bitrate (96, 160, or 320 kbps)
+### Run locally
+```bash
+cd spotify-ui
+npm install
+npm start  # Runs on localhost:4201
+```
+
+## Deployment
+
+The module is deployed via the smarthome-management-api:
+
+1. Install the module from the shell UI
+2. Configure device name and bitrate
+3. The API deploys both the MFE and Spotifyd service to K8s
+
+### Manual Docker build
+```bash
+cd spotify-ui
+docker build -t spotify-mfe:latest .
+```
+
+## Architecture
+
+- **spotify-ui**: Angular 19 MFE that displays playback status
+- **Spotifyd**: Spotify Connect daemon running in K8s with host network access
+- **Audio**: Uses ALSA with dmix for audio buffering (requires `/etc/asound.conf` on host)
 
 ## Requirements
 
 - Smarthome system with the management API running
 - Kubernetes cluster with audio device access
 - Spotify Premium account (for Spotify Connect)
+
+## Related Repositories
+
+- [smarthome-shell-ui](https://github.com/drewlane-dev/smarthome-shell-ui) - Shell application
+- [smarthome-management-api](https://github.com/drewlane-dev/smarthome-management-api) - Backend API
